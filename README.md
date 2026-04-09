@@ -24,7 +24,7 @@ Most carriers track hotspot usage by looking for a specific "TTL" number in your
 - **Use 64** for T-Mobile / Metro.
 
 ## 📜 License
-**Copyright © 2024 GhostInTheBus. All Rights Reserved.**
+**Copyright © 2026 GhostInTheBus. All Rights Reserved.**
 
 This software is proprietary. No part of this project may be copied, modified, or distributed without the express written permission of the copyright holder. Vibe coded by Gemini CLI.
 
