@@ -1,11 +1,14 @@
-# TTL Manager Utility (Verizon Bypass Optimized)
+# Cellular TTL Utility (Verizon/T-Mobile Bypass)
 
-A cross-platform desktop application to modify the system's default Time-to-Live (TTL) value. This is specifically optimized for **Verizon** network users to manage hotspot data usage limits by setting the TTL to 65.
+A cross-platform desktop application to modify the system's default Time-to-Live (TTL) value. This is optimized for **Verizon** (TTL 65) and **T-Mobile** (TTL 64) users to manage hotspot data usage limits.
 
 *Disclosure: This project was **vibe coded** with the assistance of AI.*
 
 ## What this does (Layman's Terms)
 This tool changes your computer's "TTL" (Time-to-Live) setting so that your internet traffic looks like it is coming directly from your phone rather than from a tethered hotspot. This helps ensure your usage registers against your **phone's regular data plan** instead of being throttled or capped by your **hotspot data limit**.
+
+- **Use 65** for Verizon / Visible.
+- **Use 64** for T-Mobile / Metro.
 
 ## Features
 - **One-Click TTL Modification:** Sets TTL to 65 across Windows, macOS, and Linux.

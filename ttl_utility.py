@@ -9,14 +9,14 @@ from tkinter import messagebox, scrolledtext
 class TTLUtilityApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Verizon TTL Utility")
-        self.root.geometry("500x450")
+        self.root.title("Cellular TTL Utility")
+        self.root.geometry("500x480")
         
         self.os_type = platform.system()
         self.is_admin = self.check_admin()
         
         self.setup_ui()
-        self.log("Verizon Optimized TTL Manager (TTL=65)")
+        self.log("Cellular TTL Manager (Verizon/T-Mobile)")
         self.log("Vibe coded by Gemini CLI.")
         self.log(f"Detected OS: {self.os_type}")
         self.log(f"Admin Privileges: {'Yes' if self.is_admin else 'No'}")
@@ -46,8 +46,8 @@ class TTLUtilityApp:
 
     def setup_ui(self):
         # Header
-        tk.Label(self.root, text="Verizon TTL Manager", font=("Arial", 16, "bold")).pack(pady=(10, 0))
-        tk.Label(self.root, text="Changes TTL so usage registers as phone data, not hotspot.", font=("Arial", 9, "italic"), fg="#555").pack(pady=(0, 10))
+        tk.Label(self.root, text="Cellular TTL Manager", font=("Arial", 16, "bold")).pack(pady=(10, 0))
+        tk.Label(self.root, text="Bypass limits for Verizon (65) and T-Mobile (64).", font=("Arial", 9, "italic"), fg="#555").pack(pady=(0, 10))
         
         # Custom TTL Input
         input_frame = tk.Frame(self.root)
@@ -74,14 +74,14 @@ class TTLUtilityApp:
 
     def show_help(self):
         help_text = (
-            "Why 64 vs 65?\n\n"
-            "64: The standard default for Android/iOS/Linux/macOS.\n\n"
-            "65: Often used because your phone acts as a 'hop'. By starting at 65, "
-            "the packet reaches the carrier with a TTL of 64, making it look exactly "
-            "like it originated from the phone itself.\n\n"
-            "Try 65 first; if it doesn't work, try 64."
+            "Which TTL should I use?\n\n"
+            "64 (T-Mobile/Metro): The standard default for mobile devices. "
+            "Use this if you are on T-Mobile to make your computer look like a phone.\n\n"
+            "65 (Verizon/Visible): Verizon often expects a 'hop' from the phone. "
+            "Starting at 65 ensures the signal reaches them at 64.\n\n"
+            "Tip: If one doesn't work, try the other!"
         )
-        messagebox.showinfo("TTL Explained", help_text)
+        messagebox.showinfo("Carrier TTL Guide", help_text)
 
     def apply_custom_ttl(self):
         target_ttl = self.ttl_entry.get().strip()
@@ -155,8 +155,10 @@ class TTLUtilityApp:
             if ttl_match:
                 current_ttl = ttl_match.group(1)
                 self.log(f"Test Successful! Current Active TTL: {current_ttl}")
-                if current_ttl == "65":
-                    self.log("CONFIRMED: Your connection is using the custom TTL (65).")
+                # We show confirmation if it matches the target in the entry
+                target = self.ttl_entry.get().strip()
+                if current_ttl == target:
+                    self.log(f"CONFIRMED: Your connection is using the custom TTL ({target}).")
                 else:
                     self.log(f"NOTICE: System is currently using TTL {current_ttl}.")
             else:
