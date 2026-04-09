@@ -30,8 +30,15 @@ The application acts as a GUI wrapper for system-level networking commands:
 python ttl_utility.py
 ```
 
-## Compiling to Executable
-To create a standalone `.exe` (Windows) or `.app` (macOS), use **PyInstaller**:
+## Releases & Automated Builds
+This repository is configured with **GitHub Actions**. To automatically create an official release with downloadable `.exe` and `.app` files:
+
+1. Tag your code: `git tag v1.0.0`
+2. Push the tag: `git push origin v1.0.0`
+3. Check the **Releases** tab on GitHub for the generated binaries.
+
+## Manual Compilation
+If you prefer to build locally, use **PyInstaller**:
 
 1. Install PyInstaller:
    ```bash
