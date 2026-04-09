@@ -2,6 +2,8 @@
 
 A cross-platform desktop application to modify the system's default Time-to-Live (TTL) value. This is specifically optimized for **Verizon** network users to manage hotspot data usage limits by setting the TTL to 65.
 
+*Disclosure: This project was **vibe coded** with the assistance of AI.*
+
 ## Features
 - **One-Click TTL Modification:** Sets TTL to 65 across Windows, macOS, and Linux.
 - **Admin Privilege Management:** Automatically detects and requests administrative/root elevation when needed.

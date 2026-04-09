@@ -17,6 +17,7 @@ class TTLUtilityApp:
         
         self.setup_ui()
         self.log("Verizon Optimized TTL Manager (TTL=65)")
+        self.log("Vibe coded by Gemini CLI.")
         self.log(f"Detected OS: {self.os_type}")
         self.log(f"Admin Privileges: {'Yes' if self.is_admin else 'No'}")
         
