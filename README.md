@@ -1,6 +1,6 @@
-# TTL Manager Utility
+# TTL Manager Utility (Verizon Bypass Optimized)
 
-A cross-platform desktop application to modify the system's default Time-to-Live (TTL) value. This is often used for optimizing network behavior or bypassing certain carrier limitations.
+A cross-platform desktop application to modify the system's default Time-to-Live (TTL) value. This is specifically optimized for **Verizon** network users to manage hotspot data usage limits by setting the TTL to 65.
 
 ## Features
 - **One-Click TTL Modification:** Sets TTL to 65 across Windows, macOS, and Linux.

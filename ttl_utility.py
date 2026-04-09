@@ -9,13 +9,14 @@ from tkinter import messagebox, scrolledtext
 class TTLUtilityApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Cross-Platform TTL Utility")
+        self.root.title("Verizon TTL Utility")
         self.root.geometry("500x450")
         
         self.os_type = platform.system()
         self.is_admin = self.check_admin()
         
         self.setup_ui()
+        self.log("Verizon Optimized TTL Manager (TTL=65)")
         self.log(f"Detected OS: {self.os_type}")
         self.log(f"Admin Privileges: {'Yes' if self.is_admin else 'No'}")
         
