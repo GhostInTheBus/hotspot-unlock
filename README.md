@@ -1,24 +1,21 @@
-# Cellular TTL Manager
+# Hotspot Unlock
 **Bypass Hotspot Limits on Verizon & T-Mobile**
 
-This utility allows your computer to share your phone's regular data plan instead of being restricted by hotspot caps. It works by adjusting your system's "TTL" (Time-to-Live) settings to match your phone's internal signature.
+Hotspot Unlock effectively transforms your computer into a cell phone in the eyes of your carrier. By masking your system's network signature, it allows you to draw from your **primary mobile data plan** instead of a restricted hotspot bucket—turning a limited connection into an **infinite phone plan experience**.
 
 ## 🚀 Quick Start
 1. **Download:** Get the latest version from the [Releases](https://github.com/GhostInTheBus/ttl-utility/releases) page.
 2. **Run:** 
-   - **Mac:** Double-click `CellularTTL`. (If it blocks you, **Right-click > Open**).
-   - **Windows:** Double-click `CellularTTL.exe`.
+   - **Mac:** Double-click `HotspotUnlock`. (If it blocks you, **Right-click > Open**).
+   - **Windows:** Double-click `HotspotUnlock.exe`.
 3. **Select Carrier:**
    - **Verizon / Visible:** Use **65**.
    - **T-Mobile / Metro:** Use **64**.
-4. **Apply:** Click **"Apply Target TTL"**. You will be asked for your password/TouchID to confirm the system change.
-5. **Verify:** Click **"Test Connection"**. If it says "CONFIRMED," you are good to go.
+4. **Apply:** Click **"Unlock Infinite Plan"**. You will be asked for your password/TouchID to authorize the system change.
+5. **Verify:** Click **"Test Connection"**. If it says "UNLOCK VERIFIED," you are good to go.
 
-## 🛠 The Vision: Your Computer is now a Phone
-This application effectively turns your computer into a cell phone in the eyes of your carrier. By synchronizing your system's identity, you can use your **primary mobile data plan** instead of a restricted hotspot plan—turning a limited connection into an **infinite phone plan experience**.
-
-## Why this works (The Vibe)
-Most carriers track hotspot usage by looking for a specific "TTL" number in your data. Computers usually send a different number than phones. This tool makes your computer "whisper" the same number as your phone, so the carrier registers the data as coming from the device in your hand, not the laptop on your desk.
+## 🛠 The Vision
+Do you have an unlimited phone plan but a limited hotspot plan? This utility makes your hotspot plan unlimited like your phone by masking your computer's TTL signature. It ensures your usage registers against your **phone's regular data plan**, effectively bypassing hotspot data limits and throttling.
 
 - **Use 65** for Verizon / Visible.
 - **Use 64** for T-Mobile / Metro.
@@ -26,8 +23,8 @@ Most carriers track hotspot usage by looking for a specific "TTL" number in your
 ## 📜 License
 **Copyright © 2026 GhostInTheBus. All Rights Reserved.**
 
-This software is proprietary. No part of this project may be copied, modified, or distributed without the express written permission of the copyright holder. Vibe coded by Gemini CLI.
+This software is proprietary. Vibe coded by Gemini CLI.
 
 ## 🍺 Support the Vibe
-If this utility helped you turn your hotspot into an infinite plan, feel free to buy me a beer!
+If this utility helped you unlock your hotspot, feel free to buy me a beer!
 [**Buy Me a Beer**](https://www.buymeacoffee.com/GhostInTheBus)

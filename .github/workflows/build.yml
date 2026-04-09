@@ -3,7 +3,7 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*' # Trigger on version tags like v1.0.0
+      - 'v*'
 
 permissions:
   contents: write
@@ -17,11 +17,11 @@ jobs:
         os: [windows-latest, macos-latest, ubuntu-latest]
         include:
           - os: windows-latest
-            artifact_name: CellularTTL.exe
+            artifact_name: HotspotUnlock.exe
           - os: macos-latest
-            artifact_name: CellularTTL-macOS
+            artifact_name: HotspotUnlock-macOS
           - os: ubuntu-latest
-            artifact_name: CellularTTL-Linux
+            artifact_name: HotspotUnlock-Linux
 
     steps:
       - name: Checkout code
@@ -40,11 +40,11 @@ jobs:
       - name: Build with PyInstaller
         run: |
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
-            pyinstaller --onefile --noconsole --name "CellularTTL" ttl_utility.py
+            pyinstaller --onefile --noconsole --name "HotspotUnlock" ttl_utility.py
           elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-            pyinstaller --windowed --onefile --name "CellularTTL" ttl_utility.py
+            pyinstaller --windowed --onefile --name "HotspotUnlock" ttl_utility.py
           else
-            pyinstaller --onefile --name "CellularTTL" ttl_utility.py
+            pyinstaller --onefile --name "HotspotUnlock" ttl_utility.py
           fi
         shell: bash
 
@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-build
-          path: dist/CellularTTL*
+          path: dist/HotspotUnlock*
 
   release:
     name: Create Release
@@ -71,8 +71,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            artifacts/windows-latest-build/CellularTTL.exe
-            artifacts/macos-latest-build/CellularTTL
-            artifacts/ubuntu-latest-build/CellularTTL
+            artifacts/windows-latest-build/HotspotUnlock.exe
+            artifacts/macos-latest-build/HotspotUnlock
+            artifacts/ubuntu-latest-build/HotspotUnlock
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

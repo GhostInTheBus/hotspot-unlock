@@ -55,7 +55,7 @@ class ModernButton(tk.Label):
 class TTLUtilityApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Cellular TTL Manager")
+        self.root.title("Hotspot Unlock")
         self.root.geometry("540x600")
         self.root.configure(bg="#121212")
         
@@ -68,14 +68,14 @@ class TTLUtilityApp:
         self.text_main = "#eee"
 
         self.setup_ui()
-        self.log("System Initialized with Administrator Privileges.")
-        self.log(f"Platform: {platform.system()} | UID: {getattr(os, 'getuid', lambda: 'N/A')()}")
+        self.log("Hotspot Unlock System Initialized.")
+        self.log(f"Platform: {platform.system()} | Status: Authorized")
 
     def setup_ui(self):
         header = tk.Frame(self.root, bg=self.primary_bg, pady=20)
         header.pack(fill=tk.X)
-        tk.Label(header, text="CELLULAR TTL", font=("Arial", 24, "bold"), bg=self.primary_bg, fg=self.accent_green).pack()
-        tk.Label(header, text="The Infinite Phone Plan Utility", font=("Arial", 10, "italic"), bg=self.primary_bg, fg=self.text_dim).pack()
+        tk.Label(header, text="HOTSPOT UNLOCK", font=("Arial", 24, "bold"), bg=self.primary_bg, fg=self.accent_green).pack()
+        tk.Label(header, text="The Infinite Phone Plan Experience", font=("Arial", 10, "italic"), bg=self.primary_bg, fg=self.text_dim).pack()
 
         card = tk.Frame(self.root, bg=self.card_bg, padx=20, pady=20, highlightbackground="#333", highlightthickness=1)
         card.pack(fill=tk.X, padx=20, pady=10)
@@ -96,7 +96,7 @@ class TTLUtilityApp:
         self.ttl_entry.pack(side=tk.LEFT, ipady=3)
         ModernButton(ttl_entry_frame, "?", command=self.show_help, bg="#444", hover_bg="#555").pack(side=tk.LEFT, padx=10)
 
-        ModernButton(self.root, "APPLY INFINITE PLAN", command=self.apply_custom_ttl, bg=self.accent_green, hover_bg="#3d8b40").pack(fill=tk.X, padx=20, pady=15)
+        ModernButton(self.root, "UNLOCK INFINITE PLAN", command=self.apply_custom_ttl, bg=self.accent_green, hover_bg="#3d8b40").pack(fill=tk.X, padx=20, pady=15)
 
         actions = tk.Frame(self.root, bg=self.primary_bg)
         actions.pack(fill=tk.X, padx=20)
@@ -152,7 +152,7 @@ class TTLUtilityApp:
             messagebox.showerror("Error", "Invalid TTL.")
             return
 
-        self.log(f"Applying TTL {val}...")
+        self.log(f"Unlocking Infinite Plan (TTL {val})...")
         if platform.system() == "Windows":
             self.run_command(f"netsh int ipv4 set global defaultcurhoplimit={val} store=persistent")
             self.run_command(f"netsh int ipv6 set global defaultcurhoplimit={val} store=persistent")
@@ -183,7 +183,7 @@ class TTLUtilityApp:
             if match:
                 curr = match.group(1)
                 self.log(f"Active TTL: {curr}")
-                if curr == self.ttl_entry.get().strip(): self.log("BYPASS VERIFIED.")
+                if curr == self.ttl_entry.get().strip(): self.log("UNLOCK VERIFIED.")
 
 if __name__ == "__main__":
     if not is_admin():
