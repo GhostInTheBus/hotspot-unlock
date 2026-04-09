@@ -75,6 +75,11 @@ h1 {
   color: white;
 }
 
+.btn-beer {
+  background-color: #FFC107;
+  color: #000;
+}
+
 .btn:hover {
   opacity: 0.8;
 }

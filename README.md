@@ -27,3 +27,7 @@ Most carriers track hotspot usage by looking for a specific "TTL" number in your
 **Copyright © 2024 GhostInTheBus. All Rights Reserved.**
 
 This software is proprietary. No part of this project may be copied, modified, or distributed without the express written permission of the copyright holder. Vibe coded by Gemini CLI.
+
+## 🍺 Support the Vibe
+If this utility helped you turn your hotspot into an infinite plan, feel free to buy me a beer!
+[**Buy Me a Beer**](https://www.buymeacoffee.com/GhostInTheBus)
