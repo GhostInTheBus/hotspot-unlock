@@ -1,0 +1,17 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="200" rx="40" fill="#1a1a1a"/>
+  
+  <!-- Signal Bars -->
+  <rect x="50" y="110" width="15" height="30" rx="4" fill="#4CAF50"/>
+  <rect x="75" y="90" width="15" height="50" rx="4" fill="#4CAF50"/>
+  <rect x="100" y="70" width="15" height="70" rx="4" fill="#4CAF50"/>
+  <rect x="125" y="50" width="15" height="90" rx="4" fill="#4CAF50"/>
+  
+  <!-- TTL Badge -->
+  <circle cx="150" cy="150" r="30" fill="#2196F3"/>
+  <text x="150" y="158" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">65</text>
+  
+  <!-- Label -->
+  <text x="100" y="185" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#888" text-anchor="middle">CELLULAR TTL</text>
+</svg>
