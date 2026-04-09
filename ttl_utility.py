@@ -46,7 +46,8 @@ class TTLUtilityApp:
 
     def setup_ui(self):
         # Header
-        tk.Label(self.root, text="TTL Manager", font=("Arial", 16, "bold")).pack(pady=10)
+        tk.Label(self.root, text="Verizon TTL Manager", font=("Arial", 16, "bold")).pack(pady=(10, 0))
+        tk.Label(self.root, text="Changes TTL so usage registers as phone data, not hotspot.", font=("Arial", 9, "italic"), fg="#555").pack(pady=(0, 10))
         
         # Action Buttons
         btn_frame = tk.Frame(self.root)

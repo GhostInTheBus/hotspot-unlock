@@ -4,6 +4,9 @@ A cross-platform desktop application to modify the system's default Time-to-Live
 
 *Disclosure: This project was **vibe coded** with the assistance of AI.*
 
+## What this does (Layman's Terms)
+This tool changes your computer's "TTL" (Time-to-Live) setting so that your internet traffic looks like it is coming directly from your phone rather than from a tethered hotspot. This helps ensure your usage registers against your **phone's regular data plan** instead of being throttled or capped by your **hotspot data limit**.
+
 ## Features
 - **One-Click TTL Modification:** Sets TTL to 65 across Windows, macOS, and Linux.
 - **Admin Privilege Management:** Automatically detects and requests administrative/root elevation when needed.
