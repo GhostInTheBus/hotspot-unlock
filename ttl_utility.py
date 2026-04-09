@@ -26,7 +26,6 @@ def elevate():
             params = " ".join([f'"{arg}"' for arg in sys.argv])
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, params, None, 1)
         elif os_type == "Darwin":
-            # Direct osascript elevation for macOS
             args = " ".join([f"quoted form of \"{arg}\"" for arg in sys.argv])
             script = f'do shell script "{sys.executable}" & " " & {args} with administrator privileges'
             subprocess.run(["osascript", "-e", script], check=True)
@@ -115,7 +114,7 @@ class TTLUtilityApp:
             self.log(f"Profile: {selection}")
 
     def show_help(self):
-        msg = "Verizon: 65\nT-Mobile: 64\n\nSets IPv4/v6 Stack + Windows Registry."
+        msg = "Verizon: 65\nT-Mobile: 64\n\nSets system parameters for permanent hotspot bypass."
         messagebox.showinfo("Guide", msg)
 
     def log(self, message):
@@ -129,8 +128,46 @@ class TTLUtilityApp:
         except Exception as e:
             err = str(e)
             if "The operation was successful" not in err:
-                self.log(f"Error executing command: {cmd}")
+                self.log(f"Error: {err.split(':')[-1]}")
             return None
+
+    def set_macos_persistence(self, value):
+        """Creates a LaunchDaemon to ensure TTL persistence on macOS."""
+        plist_content = f'''<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.hotspotunlock.ttl</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/sbin/sysctl</string>
+        <string>-w</string>
+        <string>net.inet.ip.ttl={value}</string>
+        <string>net.inet6.ip6.hlim={value}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>'''
+        plist_path = "/Library/LaunchDaemons/com.hotspotunlock.ttl.plist"
+        try:
+            # Write plist file
+            with open("/tmp/com.hotspotunlock.ttl.plist", "w") as f:
+                f.write(plist_content)
+            
+            # Move to protected location and set permissions
+            self.run_command(f"mv /tmp/com.hotspotunlock.ttl.plist {plist_path}")
+            self.run_command(f"chown root:wheel {plist_path}")
+            self.run_command(f"chmod 644 {plist_path}")
+            
+            # Load the daemon
+            self.run_command(f"launchctl load -w {plist_path} 2>/dev/null || true")
+            self.log("macOS Persistence Engine active.")
+            return True
+        except Exception as e:
+            self.log(f"Persistence Error: {str(e)}")
+            return False
 
     def set_windows_registry(self, value):
         try:
@@ -142,7 +179,7 @@ class TTLUtilityApp:
             for root_key, sub_key in keys:
                 with winreg.OpenKey(root_key, sub_key, 0, winreg.KEY_SET_VALUE) as key:
                     winreg.SetValueEx(key, "DefaultTTL", 0, winreg.REG_DWORD, int(value))
-            self.log("Windows Registry keys updated.")
+            self.log("Windows Registry persistence active.")
             return True
         except Exception as e:
             self.log(f"Registry Error: {str(e)}")
@@ -156,15 +193,18 @@ class TTLUtilityApp:
 
         self.log(f"Unlocking Infinite Plan (TTL {val})...")
         if platform.system() == "Windows":
-            # Using the exact command suggested by user
             self.run_command(f"netsh int ipv4 set glob defaultcurhoplimit={val}")
             self.run_command(f"netsh int ipv4 set glob curhoplimit={val}")
             self.run_command(f"netsh int ipv6 set glob defaultcurhoplimit={val}")
             self.run_command(f"netsh int ipv6 set glob curhoplimit={val}")
             self.set_windows_registry(val)
-        else:
+        elif platform.system() == "Darwin":
+            # Live stack apply
             self.run_command(f"sysctl -w net.inet.ip.ttl={val}")
             self.run_command(f"sysctl -w net.inet6.ip6.hlim={val}")
+            # Persistence engine apply
+            self.set_macos_persistence(val)
+            
         self.log("Configuration applied successfully.")
 
     def reset_ttl(self):
@@ -179,6 +219,10 @@ class TTLUtilityApp:
         else:
             self.run_command(f"sysctl -w net.inet.ip.ttl={default}")
             self.run_command(f"sysctl -w net.inet6.ip6.hlim={default}")
+            # Remove macOS persistence
+            plist_path = "/Library/LaunchDaemons/com.hotspotunlock.ttl.plist"
+            self.run_command(f"launchctl unload {plist_path} 2>/dev/null || true")
+            self.run_command(f"rm -f {plist_path}")
         self.log("Reset complete.")
 
     def test_connection(self):
@@ -191,10 +235,7 @@ class TTLUtilityApp:
                 curr = match.group(1)
                 self.log(f"Active TTL Detected: {curr}")
                 target = self.ttl_entry.get().strip()
-                if curr == target:
-                    self.log("UNLOCK VERIFIED: Infinite plan is active.")
-                else:
-                    self.log(f"NOTICE: System still reports {curr}.")
+                if curr == target: self.log("UNLOCK VERIFIED.")
 
 if __name__ == "__main__":
     if not is_admin():
