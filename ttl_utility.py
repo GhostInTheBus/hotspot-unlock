@@ -4,13 +4,17 @@ import platform
 import subprocess
 import re
 import tkinter as tk
-from tkinter import messagebox, scrolledtext
+from tkinter import messagebox, scrolledtext, ttk
 
 class TTLUtilityApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Cellular TTL Utility")
-        self.root.geometry("500x520")
+        self.root.geometry("520x560")
+        
+        # Configure Styles
+        self.style = ttk.Style()
+        self.style.theme_use('aqua' if platform.system() == "Darwin" else 'clam')
         
         self.os_type = platform.system()
         self.is_admin = self.check_admin()
@@ -45,7 +49,6 @@ class TTLUtilityApp:
                 ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
             elif self.os_type == "Darwin":
                 # Use 'quoted form of' in AppleScript for rock-solid path handling
-                args_str = " ".join([f"quoted form of '{arg}'" for arg in sys.argv])
                 script = f'do shell script (quoted form of "{sys.executable}") & " " & {" & \" \" & ".join([f"quoted form of \"{arg}\"" for arg in sys.argv])} with administrator privileges'
                 self.log("Launching AppleScript elevation prompt...")
                 result = subprocess.run(["osascript", "-e", script], capture_output=True, text=True)
@@ -54,55 +57,74 @@ class TTLUtilityApp:
                 else:
                     self.log("Elevation command sent successfully. Restarting...")
                     sys.exit()
+            elif self.os_type == "Linux":
+                os.execvp("sudo", ["sudo", sys.executable] + sys.argv)
+            sys.exit()
         except subprocess.CalledProcessError:
             self.log("Elevation cancelled by user.")
         except Exception as e:
             self.log(f"Elevation Error: {str(e)}")
 
     def setup_ui(self):
-        # Header
-        tk.Label(self.root, text="Cellular TTL Manager", font=("Arial", 16, "bold")).pack(pady=(10, 0))
-        tk.Label(self.root, text="Turns your hotspot into an infinite phone plan.", font=("Arial", 9, "italic"), fg="#4CAF50").pack(pady=(0, 10))
+        # Main Container with padding
+        main_frame = ttk.Frame(self.root, padding="20")
+        main_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Carrier Selection Dropdown
-        carrier_frame = tk.Frame(self.root)
-        carrier_frame.pack(pady=5)
-        tk.Label(carrier_frame, text="Select Carrier:").grid(row=0, column=0, padx=5)
+        # Header Section
+        header_frame = ttk.Frame(main_frame)
+        header_frame.pack(fill=tk.X, pady=(0, 20))
+        
+        ttk.Label(header_frame, text="Cellular TTL Manager", font=("Arial", 20, "bold")).pack()
+        ttk.Label(header_frame, text="Turns your hotspot into an infinite phone plan.", font=("Arial", 10, "italic"), foreground="#4CAF50").pack()
 
+        # Configuration Card
+        config_frame = ttk.LabelFrame(main_frame, text=" Configuration ", padding="15")
+        config_frame.pack(fill=tk.X, pady=10)
+
+        # Carrier Row
+        ttk.Label(config_frame, text="Select Carrier:").grid(row=0, column=0, sticky="w", pady=5)
         self.carrier_var = tk.StringVar(self.root)
-        self.carrier_var.set("Verizon / Visible (65)") # Default
+        self.carrier_var.set("Verizon / Visible (65)")
         self.carriers = {
             "Verizon / Visible (65)": "65",
             "T-Mobile / Metro (64)": "64",
             "Custom": ""
         }
+        self.carrier_menu = ttk.OptionMenu(config_frame, self.carrier_var, self.carrier_var.get(), *self.carriers.keys(), command=self.update_ttl_from_carrier)
+        self.carrier_menu.grid(row=0, column=1, sticky="ew", padx=(10, 0), pady=5)
 
-        self.carrier_menu = tk.OptionMenu(carrier_frame, self.carrier_var, *self.carriers.keys(), command=self.update_ttl_from_carrier)
-        self.carrier_menu.config(width=20)
-        self.carrier_menu.grid(row=0, column=1, padx=5)
-
-        # Custom TTL Input
-        input_frame = tk.Frame(self.root)
-        input_frame.pack(pady=5)
-        tk.Label(input_frame, text="Target TTL:").grid(row=0, column=0, padx=5)
-        self.ttl_entry = tk.Entry(input_frame, width=5)
+        # TTL Row
+        ttk.Label(config_frame, text="Target TTL:").grid(row=1, column=0, sticky="w", pady=5)
+        ttl_input_frame = ttk.Frame(config_frame)
+        ttl_input_frame.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=5)
+        
+        self.ttl_entry = ttk.Entry(ttl_input_frame, width=8)
         self.ttl_entry.insert(0, "65")
-        self.ttl_entry.grid(row=0, column=1, padx=5)
-        tk.Button(input_frame, text="?", command=self.show_help, width=2).grid(row=0, column=2, padx=5)
+        self.ttl_entry.pack(side=tk.LEFT)
+        ttk.Button(ttl_input_frame, text="?", width=3, command=self.show_help).pack(side=tk.LEFT, padx=5)
 
-        # Action Buttons
-        btn_frame = tk.Frame(self.root)
-        btn_frame.pack(pady=10)
+        # Main Action Button (Hero Button)
+        self.apply_btn = ttk.Button(main_frame, text="Apply Infinite Plan (IPv4 + IPv6)", command=self.apply_custom_ttl)
+        self.apply_btn.pack(fill=tk.X, pady=15, ipady=5)
 
-        tk.Button(btn_frame, text="Apply Target TTL (IPv4+v6)", command=self.apply_custom_ttl, width=25, bg="#4CAF50", fg="white").grid(row=0, column=0, columnspan=2, padx=5, pady=5)
-        tk.Button(btn_frame, text="Reset to Default", command=self.reset_ttl, width=20).grid(row=1, column=0, padx=5, pady=5)
-        tk.Button(btn_frame, text="Test Connection (Ping)", command=self.test_connection, width=20, bg="#2196F3", fg="white").grid(row=1, column=1, padx=5, pady=5)
-        tk.Button(btn_frame, text="Elevate to Admin", command=self.elevate, width=20).grid(row=2, column=0, columnspan=2, pady=5)
+        # Secondary Actions
+        action_frame = ttk.Frame(main_frame)
+        action_frame.pack(fill=tk.X, pady=5)
+        
+        ttk.Button(action_frame, text="Test Connection", command=self.test_connection).pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(0, 5))
+        ttk.Button(action_frame, text="Reset Defaults", command=self.reset_ttl).pack(side=tk.LEFT, expand=True, fill=tk.X, padx=(5, 0))
 
-        # Log Output
-        tk.Label(self.root, text="Activity Log:").pack(anchor="w", padx=20)
-        self.log_area = scrolledtext.ScrolledText(self.root, height=12, width=55)
-        self.log_area.pack(padx=20, pady=5)
+        # Admin Button (only if not admin)
+        if not self.is_admin:
+            ttk.Button(main_frame, text="Elevate to Administrator", command=self.elevate).pack(fill=tk.X, pady=10)
+
+        # Log Output Section
+        log_label_frame = ttk.Frame(main_frame)
+        log_label_frame.pack(fill=tk.X, pady=(15, 0))
+        ttk.Label(log_label_frame, text="Activity Log:", font=("Arial", 10, "bold")).pack(side=tk.LEFT)
+        
+        self.log_area = scrolledtext.ScrolledText(main_frame, height=10, width=50, font=("Monaco", 10), background="#f8f8f8")
+        self.log_area.pack(fill=tk.BOTH, expand=True, pady=(5, 0))
 
     def update_ttl_from_carrier(self, selection):
         value = self.carriers.get(selection)
@@ -114,12 +136,10 @@ class TTLUtilityApp:
     def show_help(self):
         help_text = (
             "Which TTL should I use?\n\n"
-            "64 (T-Mobile/Metro): The standard default for mobile devices. "
-            "Use this if you are on T-Mobile to make your computer look like a phone.\n\n"
+            "64 (T-Mobile/Metro): The standard default for mobile devices.\n\n"
             "65 (Verizon/Visible): Verizon often expects a 'hop' from the phone. "
             "Starting at 65 ensures the signal reaches them at 64.\n\n"
-            "Tip: If one doesn't work, try the other!\n"
-            "(This app now sets both IPv4 and IPv6 settings simultaneously.)"
+            "Tip: This app sets both IPv4 and IPv6 settings simultaneously."
         )
         messagebox.showinfo("Carrier TTL Guide", help_text)
 
